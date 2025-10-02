@@ -7,6 +7,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(SFML COMPONENTS graphics window system REQUIRED)
 
-add_executable(Snake main.cpp bodyrectangle.cpp bodyrectangle.h growrectangle.h globaldefs.h)
+add_executable(Snake WIN32
+    main.cpp
+    bodyrectangle.cpp
+    bodyrectangle.h
+    foodrectangle.h
+    globaldefs.h
+    snakebody.cpp
+    snakebody.h
+)
 
 target_link_libraries(Snake sfml-graphics sfml-window sfml-system)
