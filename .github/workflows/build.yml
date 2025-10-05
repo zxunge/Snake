@@ -1,0 +1,43 @@
+name: Test Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '*.md'
+      - '.clang-format'
+      - '.github/workflows/*.yml'
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - '*.md'
+      - '.clang-format'
+      - '.github/workflows/*.yml'
+
+jobs:
+  msys2:
+    runs-on: windows-latest
+
+    steps:
+    - name: Setup MSYS2 Environment
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: clang64
+        update: true
+        pacboy: >-
+          toolchain:p
+          cmake:p
+          ninja:p
+          sfml:p
+
+    - name: Checkout
+      uses: actions/checkout@v5
+
+    - name: Build
+      shell: msys2 {0}
+      run: |
+        cmake -DCMAKE_BUILD_TYPE=Debug -B build .
+        cmake --build build -j
