@@ -6,15 +6,21 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 
-class SnakeBody : public sf::VertexArray
-{
+class SnakeBody {
 public:
-    SnakeBody();
+  SnakeBody();
 
-    void move(Direction direction);
+  void move(Direction direction);
+  void render(sf::RenderWindow &wnd);
+  bool intersects(sf::RectangleShape rect) {
+    for (auto r : m_body)
+      if (r.getGlobalBounds().intersects(rect.getGlobalBounds()))
+        return true;
+    return false;
+  }
 
 private:
-    std::vector<BodyRectangle> m_body;
+  std::vector<BodyRectangle> m_body;
 };
 
 #endif // SNAKEBODY_H

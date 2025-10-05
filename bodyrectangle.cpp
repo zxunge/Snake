@@ -2,16 +2,14 @@
 
 using namespace sf;
 
-BodyRectangle::BodyRectangle()
-{
-    setFillColor(Color::Green);
-    setSize(Vector2f(g_unitX, g_unitY));
-    setPosition(0.0, 0.0);
+BodyRectangle::BodyRectangle() {
+  setFillColor(Color::Green);
+  setSize(Vector2f(g_unitX, g_unitY));
+  setPosition(0.0, 0.0);
 }
 
-BodyRectangle::BodyRectangle(sf::Vector2f pos)
-{
-    setFillColor(Color::Green);
-    setSize(Vector2f(g_unitX, g_unitY));
-    setPosition(pos.x * g_unitX, pos.y * g_unitY);
+BodyRectangle::BodyRectangle(sf::Vector2f pos) {
+  setFillColor(Color::Green);
+  setSize(Vector2f(g_unitX, g_unitY));
+  setPosition(pos.x * g_unitX, pos.y * g_unitY);
 }

@@ -5,38 +5,54 @@
 
 using namespace sf;
 
-int main(int argc, char *argv[])
-{
-    RenderWindow window(VideoMode(800, 600), "Snake");
-    window.setFramerateLimit(60);
+int main(int argc, char *argv[]) {
+  RenderWindow window(VideoMode(810, 600), "Snake",
+                      sf::Style::Titlebar | sf::Style::Close);
+  window.setFramerateLimit(30);
 
-    // Initialize random value generator
-    std::time_t t;
-    std::srand(static_cast<unsigned>(time(&t)));
+  // Initialize random value generator
+  std::time_t t;
+  std::srand(static_cast<unsigned>(time(&t)));
 
-    SnakeBody snake;
+  SnakeBody snake;
+  FoodRectangle foodRect(window.getSize());
 
-    while(window.isOpen()) {
-        // Handle events
-        Event event;
-        while(window.pollEvent(event))
-            switch (event.type) {
-            case Event::EventType::Closed:
-                window.close();
-                break;
+  while (window.isOpen()) {
+    // Handle events
+    Event event;
+    while (window.pollEvent(event))
+      switch (event.type) {
+      case sf::Event::EventType::Closed:
+        window.close();
+        break;
 
-            default:
-                break;
-            }
+      case sf::Event::EventType::KeyPressed:
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
+          snake.move(Direction::Up);
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))
+          snake.move(Direction::Down);
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
+          snake.move(Direction::Left);
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
+          snake.move(Direction::Right);
+        break;
 
-        // Clear window
-        window.clear(Color(0, 0, 0, 255));
+      default:
+        break;
+      }
 
-        // Draw graphic items
+    // Clear window
+    window.clear(Color(0, 0, 0, 255));
 
-        // Update window
-        window.display();
-    }
+    // Draw graphic items
+    if (snake.intersects(foodRect))
+      foodRect.updatePos();
+    snake.render(window);
+    window.draw(foodRect);
 
-    return 0;
+    // Update window
+    window.display();
+  }
+
+  return 0;
 }
