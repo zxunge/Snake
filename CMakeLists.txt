@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(Snake LANGUAGES CXX)
+project(Snake VERSION 0.1.0 LANGUAGES C CXX)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(SFML COMPONENTS graphics window system REQUIRED)
@@ -18,3 +18,4 @@ add_executable(Snake WIN32
 )
 
 target_link_libraries(Snake sfml-graphics sfml-window sfml-system)
+
