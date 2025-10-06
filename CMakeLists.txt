@@ -19,3 +19,5 @@ add_executable(Snake WIN32
 
 target_link_libraries(Snake sfml-graphics sfml-window sfml-system)
 
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/Zxunge Hand-Regular.ttf" DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+

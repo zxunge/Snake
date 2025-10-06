@@ -1,61 +1,142 @@
 #include "foodrectangle.h"
 #include "snakebody.h"
+
 #include <SFML/Graphics.hpp>
+
+#include <chrono>
+
 #include <cstdlib>
 
 using namespace sf;
 
-int main(int argc, char *argv[]) {
-  RenderWindow window(VideoMode(810, 600), "Snake",
-                      sf::Style::Titlebar | sf::Style::Close);
-  window.setFramerateLimit(30);
+int main(int argc, char* argv[])
+{
+    RenderWindow window(VideoMode(810, 600), "Snake", sf::Style::Titlebar | sf::Style::Close);
+    window.setFramerateLimit(60);
 
-  // Initialize random value generator
-  std::time_t t;
-  std::srand(static_cast<unsigned>(time(&t)));
+    // Initialize random value generator
+    std::time_t t;
+    std::srand(static_cast<unsigned>(time(&t)));
 
-  SnakeBody snake;
-  FoodRectangle foodRect(window.getSize());
-  Direction movingDirection = Direction::Down;
+    // Load fonts
+    Font font;
+    if (!font.loadFromFile(g_fontFile))
+        return -1;
 
-  while (window.isOpen()) {
-    // Handle events
-    Event event;
-    while (window.pollEvent(event))
-      switch (event.type) {
-      case sf::Event::EventType::Closed:
-        window.close();
-        break;
+    SnakeBody     snake(window.getSize());
+    FoodRectangle foodRect(window.getSize());
+    Direction     movingDirection   = Direction::Down;
+    auto          begin             = std::chrono::high_resolution_clock::now();
+    auto          lastOperationTime = begin;
+    bool          failed = false, welcome = true;
 
-      case sf::Event::EventType::KeyPressed:
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
-          movingDirection = Direction::Up;
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))
-          movingDirection = Direction::Down;
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
-          movingDirection = Direction::Left;
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
-          movingDirection = Direction::Right;
-        break;
+    while (window.isOpen())
+    {
+        // Handle events
+        Event event;
+        while (window.pollEvent(event))
+            switch (event.type)
+            {
+                case sf::Event::EventType::Closed:
+                    window.close();
+                    break;
 
-      default:
-        break;
-      }
+                case sf::Event::EventType::KeyPressed:
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up) ||
+                        sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
+                    {
+                        movingDirection = Direction::Up;
+                        snake.move(movingDirection);
+                    }
+                    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down) ||
+                             sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
+                    {
+                        movingDirection = Direction::Down;
+                        snake.move(movingDirection);
+                    }
+                    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left) ||
+                             sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
+                    {
+                        movingDirection = Direction::Left;
+                        snake.move(movingDirection);
+                    }
+                    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right) ||
+                             sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
+                    {
+                        movingDirection = Direction::Right;
+                        snake.move(movingDirection);
+                    }
+                    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
+                        welcome = false;
+                    else if (failed && sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter))
+                    {
+                        // Reset variables
+                        snake             = SnakeBody(window.getSize());
+                        foodRect          = FoodRectangle(window.getSize());
+                        movingDirection   = Direction::Down;
+                        begin             = std::chrono::high_resolution_clock::now();
+                        lastOperationTime = begin;
+                        failed            = false;
+                    }
+                    break;
 
-    // Clear window
-    window.clear(Color(0, 0, 0, 255));
+                default:
+                    break;
+            }
 
-    // Draw graphic items
-    snake.move(movingDirection);
-    if (snake.intersects(foodRect))
-      foodRect.updatePos();
-    snake.render(window);
-    window.draw(foodRect);
+        // Clear window
+        window.clear(Color(0, 0, 0, 255));
 
-    // Update window
-    window.display();
-  }
+        // Draw graphic items
+        if (!welcome && !failed) [[likely]]
+        {
+            auto now     = std::chrono::high_resolution_clock::now();
+            auto elapsed = now - lastOperationTime;
+            if (elapsed >= g_movingInterval)
+            {
+                snake.move(movingDirection);
+                lastOperationTime = now;
+            }
 
-  return 0;
+            if (snake.intersects(foodRect))
+            {
+                snake.eat(foodRect);
+                foodRect.updatePos();
+            }
+
+            if (!snake.isValid())
+                failed = true;
+
+            snake.render(window);
+            window.draw(foodRect);
+        }
+        else if (!welcome && failed)
+        {
+            sf::Text text;
+            text.setFont(font);
+            text.setCharacterSize(30);
+            text.setFillColor(sf::Color::White);
+            text.setStyle(sf::Text::Bold | sf::Text::Underlined);
+            text.setPosition(sf::Vector2f(0, window.getSize().y / 2));
+            text.setString(sf::String("You are failed. Press <Enter> to restart the game."));
+            window.draw(text);
+        }
+        else
+        {
+            // Render a Welcome window
+            sf::Text text;
+            text.setFont(font);
+            text.setCharacterSize(30);
+            text.setFillColor(sf::Color::White);
+            text.setStyle(sf::Text::Bold | sf::Text::Underlined);
+            text.setPosition(sf::Vector2f(0, window.getSize().y / 2));
+            text.setString(sf::String("Welcome to the Snake Game developed by zxunge! Start by pressing <Space>."));
+            window.draw(text);
+        }
+
+        // Update window
+        window.display();
+    }
+
+    return 0;
 }
-
