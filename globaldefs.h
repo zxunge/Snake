@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #ifndef GLOBALDEFS_H
 #define GLOBALDEFS_H
 

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #ifndef FOODRECTANGLE_H
 #define FOODRECTANGLE_H
 

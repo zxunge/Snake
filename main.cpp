@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #include "foodrectangle.h"
 #include "snakebody.h"
 

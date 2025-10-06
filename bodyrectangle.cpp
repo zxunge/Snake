@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #include "bodyrectangle.h"
 
 using namespace sf;

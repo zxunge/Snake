@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #ifndef SNAKEBODY_H
 #define SNAKEBODY_H
 
