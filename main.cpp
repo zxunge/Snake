@@ -6,6 +6,7 @@
 #include <SFML/Graphics.hpp>
 
 #include <chrono>
+#include <string>
 
 #include <cstdlib>
 
@@ -111,6 +112,7 @@ int main(int argc, char* argv[])
 
             snake.render(window);
             window.draw(foodRect);
+            window.setTitle("Snake: Scores - " + std::to_string(snake.score()));
         }
         else if (!welcome && failed)
         {

@@ -43,6 +43,10 @@ public:
                 return false;
         return true;
     }
+    sf::Uint32 score()
+    {
+        return m_body.size() - g_initialLength;
+    }
 
 private:
     std::vector<BodyRectangle> m_body;
