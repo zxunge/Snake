@@ -16,6 +16,7 @@ int main(int argc, char *argv[]) {
 
   SnakeBody snake;
   FoodRectangle foodRect(window.getSize());
+  Direction movingDirection = Direction::Down;
 
   while (window.isOpen()) {
     // Handle events
@@ -28,13 +29,13 @@ int main(int argc, char *argv[]) {
 
       case sf::Event::EventType::KeyPressed:
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
-          snake.move(Direction::Up);
+          movingDirection = Direction::Up;
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))
-          snake.move(Direction::Down);
+          movingDirection = Direction::Down;
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
-          snake.move(Direction::Left);
+          movingDirection = Direction::Left;
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
-          snake.move(Direction::Right);
+          movingDirection = Direction::Right;
         break;
 
       default:
@@ -45,6 +46,7 @@ int main(int argc, char *argv[]) {
     window.clear(Color(0, 0, 0, 255));
 
     // Draw graphic items
+    snake.move(movingDirection);
     if (snake.intersects(foodRect))
       foodRect.updatePos();
     snake.render(window);
@@ -56,3 +58,4 @@ int main(int argc, char *argv[]) {
 
   return 0;
 }
+
