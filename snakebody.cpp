@@ -5,9 +5,7 @@
 void SnakeBody::move(Direction direction)
 {
     for (int i = m_body.size() - 1; i != 0; --i)
-    {
         m_body[i].setPosition(m_body[i - 1].getPosition().x, m_body[i - 1].getPosition().y);
-    }
     switch (direction)
     {
         case Direction::Left:
@@ -32,7 +30,7 @@ void SnakeBody::eat(FoodRectangle food)
 {
     // We must let m_body[0] be the `food'
     m_body.resize(m_body.size() + 1);
-    for (size_t i = m_body.size() - 2; i != 0; --i)
+    for (long i = m_body.size() - 2; i >= 0; --i)
         m_body[i + 1] = m_body[i];
     m_body[0] = food;
     m_body[0].setFillColor(g_bodyColor); // Restore the color.
