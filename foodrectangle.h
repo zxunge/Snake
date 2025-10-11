@@ -7,6 +7,7 @@
 #include "globaldefs.h"
 
 #include <cstdlib>
+#include <random>
 
 class FoodRectangle : public BodyRectangle
 {
@@ -19,8 +20,9 @@ public:
 
     void updatePos()
     {
-        setPosition((g_randGen() % (static_cast<int>(m_windowSize.x) / g_unitX)) * g_unitX,
-                    (g_randGen() % (static_cast<int>(m_windowSize.y) / g_unitY)) * g_unitY);
+        std::uniform_int_distribution<int> distribX(0, static_cast<int>(m_windowSize.x) / g_unitX);
+        std::uniform_int_distribution<int> distribY(0, static_cast<int>(m_windowSize.y) / g_unitY);
+        setPosition(distribX(g_randGen) * g_unitX, distribY(g_randGen) * g_unitY);
     }
 
 private:
