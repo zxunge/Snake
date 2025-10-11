@@ -9,8 +9,11 @@
 #include <string>
 
 #include <cstdlib>
+#include <random>
 
 using namespace sf;
+
+std::mt19937 g_randGen;
 
 int main(int argc, char* argv[])
 {
@@ -18,8 +21,8 @@ int main(int argc, char* argv[])
     window.setFramerateLimit(60);
 
     // Initialize random value generator
-    std::time_t t;
-    std::srand(static_cast<unsigned>(time(&t)));
+    std::random_device rd;
+    g_randGen = std::mt19937(rd());
 
     // Load fonts
     Font font;
