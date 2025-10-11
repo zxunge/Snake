@@ -14,7 +14,7 @@ using namespace sf;
 
 int main(int argc, char* argv[])
 {
-    RenderWindow window(VideoMode(810, 600), "Snake", sf::Style::Titlebar | sf::Style::Close);
+    RenderWindow window(VideoMode(25 * g_unitX, 20 * g_unitY), "Snake", sf::Style::Titlebar | sf::Style::Close);
     window.setFramerateLimit(60);
 
     // Initialize random value generator
@@ -25,6 +25,11 @@ int main(int argc, char* argv[])
     Font font;
     if (!font.loadFromFile(g_fontFile))
         return -1;
+    sf::Text text; // Global text holder
+    text.setFont(font);
+    text.setCharacterSize(30);
+    text.setFillColor(sf::Color::White);
+    text.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
     SnakeBody     snake(window.getSize());
     FoodRectangle foodRect(window.getSize());
@@ -116,11 +121,6 @@ int main(int argc, char* argv[])
         }
         else if (!welcome && failed)
         {
-            sf::Text text;
-            text.setFont(font);
-            text.setCharacterSize(30);
-            text.setFillColor(sf::Color::White);
-            text.setStyle(sf::Text::Bold | sf::Text::Underlined);
             text.setPosition(sf::Vector2f(0, window.getSize().y / 2));
             text.setString(sf::String("You are failed. Press <Enter> to restart the game."));
             window.draw(text);
@@ -128,11 +128,6 @@ int main(int argc, char* argv[])
         else
         {
             // Render a Welcome window
-            sf::Text text;
-            text.setFont(font);
-            text.setCharacterSize(30);
-            text.setFillColor(sf::Color::White);
-            text.setStyle(sf::Text::Bold | sf::Text::Underlined);
             text.setPosition(sf::Vector2f(0, window.getSize().y / 2));
             text.setString(sf::String("Welcome to the Snake Game developed by zxunge! Start by pressing <Space>."));
             window.draw(text);
