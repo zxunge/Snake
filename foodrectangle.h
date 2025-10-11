@@ -19,8 +19,8 @@ public:
 
     void updatePos()
     {
-        setPosition((std::rand() % (static_cast<int>(m_windowSize.x) / g_unitX)) * g_unitX,
-                    (std::rand() % (static_cast<int>(m_windowSize.y) / g_unitY)) * g_unitY);
+        setPosition((g_randGen() % (static_cast<int>(m_windowSize.x) / g_unitX)) * g_unitX,
+                    (g_randGen() % (static_cast<int>(m_windowSize.y) / g_unitY)) * g_unitY);
     }
 
 private:
