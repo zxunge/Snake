@@ -6,8 +6,9 @@
 #include "bodyrectangle.h"
 #include "globaldefs.h"
 
-#include <cstdlib>
 #include <random>
+
+#include <cstdlib>
 
 class FoodRectangle : public BodyRectangle
 {

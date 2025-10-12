@@ -6,8 +6,8 @@
 #include <SFML/Graphics/Color.hpp>
 
 #include <chrono>
-#include <string>
 #include <random>
+#include <string>
 
 const int                       g_unitX         = 20;
 const int                       g_unitY         = 20;

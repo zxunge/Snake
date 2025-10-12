@@ -6,10 +6,10 @@
 #include <SFML/Graphics.hpp>
 
 #include <chrono>
+#include <random>
 #include <string>
 
 #include <cstdlib>
-#include <random>
 
 using namespace sf;
 
@@ -17,7 +17,7 @@ std::mt19937 g_randGen;
 
 int main(int argc, char* argv[])
 {
-    RenderWindow window(VideoMode(25 * g_unitX, 20 * g_unitY), "Snake", sf::Style::Titlebar | sf::Style::Close);
+    RenderWindow window(VideoMode(45 * g_unitX, 45 * g_unitY), "Snake", sf::Style::Titlebar | sf::Style::Close);
     window.setFramerateLimit(60);
 
     // Initialize random value generator
