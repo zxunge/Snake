@@ -9,23 +9,19 @@
 #include <random>
 #include <string>
 
-#include <cstdlib>
-
-using namespace sf;
-
 std::mt19937 g_randGen;
 
 int main(int argc, char* argv[])
 {
-    RenderWindow window(VideoMode(45 * g_unitX, 45 * g_unitY), "Snake", sf::Style::Titlebar | sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode(45 * g_unitX, 40 * g_unitY), "Snake", sf::Style::Titlebar | sf::Style::Close);
     window.setFramerateLimit(60);
 
-    // Initialize random value generator
-    std::random_device rd;
-    g_randGen = std::mt19937(rd());
+    // Initialization
+    g_randGen                                = std::mt19937(std::random_device{}());
+    std::chrono::milliseconds movingInterval = g_defMovingInterval;
 
     // Load fonts
-    Font font;
+    sf::Font font;
     if (!font.loadFromFile(g_fontFile))
         return -1;
     sf::Text text; // Global text holder
@@ -34,17 +30,18 @@ int main(int argc, char* argv[])
     text.setFillColor(sf::Color::White);
     text.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
-    SnakeBody     snake(window.getSize());
-    FoodRectangle foodRect(window.getSize());
-    Direction     movingDirection   = Direction::Down;
-    auto          begin             = std::chrono::high_resolution_clock::now();
-    auto          lastOperationTime = begin;
-    bool          failed = false, welcome = true;
+    SnakeBody         snake(window.getSize());
+    FoodRectangle     foodRect(window.getSize());
+    Direction         movingDirection   = Direction::Down;
+    auto              begin             = std::chrono::high_resolution_clock::now();
+    auto              lastOperationTime = begin;
+    bool              failed = false, welcome = true;
+    sf::Keyboard::Key lastKey = sf::Keyboard::Key::Unknown;
 
     while (window.isOpen())
     {
         // Handle events
-        Event event;
+        sf::Event event;
         while (window.pollEvent(event))
             switch (event.type)
             {
@@ -53,42 +50,61 @@ int main(int argc, char* argv[])
                     break;
 
                 case sf::Event::EventType::KeyPressed:
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up) ||
-                        sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
+                    if (lastKey == event.key.code && movingInterval.count() >= std::chrono::milliseconds(30).count())
+                        movingInterval -= std::chrono::milliseconds(5);
+                    switch (event.key.code)
                     {
-                        movingDirection = Direction::Up;
-                        snake.move(movingDirection);
+                        case sf::Keyboard::Key::Up:
+                        case sf::Keyboard::Key::W:
+                            movingDirection = Direction::Up;
+                            snake.move(movingDirection);
+                            break;
+
+                        case sf::Keyboard::Key::Down:
+                        case sf::Keyboard::Key::S:
+                            movingDirection = Direction::Down;
+                            snake.move(movingDirection);
+                            break;
+
+                        case sf::Keyboard::Key::Left:
+                        case sf::Keyboard::Key::A:
+                            movingDirection = Direction::Left;
+                            snake.move(movingDirection);
+                            break;
+
+                        case sf::Keyboard::Key::Right:
+                        case sf::Keyboard::Key::D:
+                            movingDirection = Direction::Right;
+                            snake.move(movingDirection);
+                            break;
+
+                        case sf::Keyboard::Key::Space:
+                            welcome = false;
+                            break;
+
+                        case sf::Keyboard::Key::R:
+                            // Recover default moving interval
+                            movingInterval = g_defMovingInterval;
+                            break;
+
+                        case sf::Keyboard::Key::Enter:
+                            if (failed)
+                            {
+                                // Reset variables
+                                snake             = SnakeBody(window.getSize());
+                                foodRect          = FoodRectangle(window.getSize());
+                                movingDirection   = Direction::Down;
+                                begin             = std::chrono::high_resolution_clock::now();
+                                lastOperationTime = begin;
+                                failed            = false;
+                                movingInterval    = g_defMovingInterval;
+                            }
+                            break;
+
+                        default:
+                            break;
                     }
-                    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down) ||
-                             sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
-                    {
-                        movingDirection = Direction::Down;
-                        snake.move(movingDirection);
-                    }
-                    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left) ||
-                             sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
-                    {
-                        movingDirection = Direction::Left;
-                        snake.move(movingDirection);
-                    }
-                    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right) ||
-                             sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-                    {
-                        movingDirection = Direction::Right;
-                        snake.move(movingDirection);
-                    }
-                    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
-                        welcome = false;
-                    else if (failed && sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter))
-                    {
-                        // Reset variables
-                        snake             = SnakeBody(window.getSize());
-                        foodRect          = FoodRectangle(window.getSize());
-                        movingDirection   = Direction::Down;
-                        begin             = std::chrono::high_resolution_clock::now();
-                        lastOperationTime = begin;
-                        failed            = false;
-                    }
+                    lastKey = event.key.code;
                     break;
 
                 default:
@@ -96,14 +112,14 @@ int main(int argc, char* argv[])
             }
 
         // Clear window
-        window.clear(Color(0, 0, 0, 255));
+        window.clear(sf::Color(0, 0, 0, 255));
 
         // Draw graphic items
         if (!welcome && !failed) [[likely]]
         {
             auto now     = std::chrono::high_resolution_clock::now();
             auto elapsed = now - lastOperationTime;
-            if (elapsed >= g_movingInterval)
+            if (elapsed >= movingInterval)
             {
                 snake.move(movingDirection);
                 lastOperationTime = now;

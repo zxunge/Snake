@@ -8,8 +8,6 @@
 
 #include <random>
 
-#include <cstdlib>
-
 class FoodRectangle : public BodyRectangle
 {
 public:
@@ -21,8 +19,8 @@ public:
 
     void updatePos()
     {
-        std::uniform_int_distribution<int> distribX(0, static_cast<int>(m_windowSize.x) / g_unitX);
-        std::uniform_int_distribution<int> distribY(0, static_cast<int>(m_windowSize.y) / g_unitY);
+        std::uniform_int_distribution<int> distribX(0, static_cast<int>(m_windowSize.x) / g_unitX - 1);
+        std::uniform_int_distribution<int> distribY(0, static_cast<int>(m_windowSize.y) / g_unitY - 1);
         setPosition(distribX(g_randGen) * g_unitX, distribY(g_randGen) * g_unitY);
     }
 
