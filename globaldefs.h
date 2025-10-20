@@ -9,8 +9,8 @@
 #include <random>
 #include <string>
 
-const int                       g_unitX         = 20;
-const int                       g_unitY         = 20;
+const int                       g_unitX         = 15;
+const int                       g_unitY         = 15;
 const int                       g_initialLength = 3;
 const sf::Color                 g_bodyColor     = sf::Color::Green;
 const sf::Color                 g_foodColor     = sf::Color::Red;

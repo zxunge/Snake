@@ -14,7 +14,7 @@ std::mt19937 g_randGen;
 
 int main(int argc, char* argv[])
 {
-    sf::RenderWindow window(sf::VideoMode({45 * g_unitX, 40 * g_unitY}), "Snake", sf::Style::Titlebar | sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode({70 * g_unitX, 65 * g_unitY}), "Snake", sf::Style::Titlebar | sf::Style::Close);
     window.setFramerateLimit(60);
 
     // Initialization
@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
     Direction              movingDirection   = Direction::Down;
     auto                   begin             = std::chrono::high_resolution_clock::now();
     auto                   lastOperationTime = begin;
-    bool                   failed = false, welcome = true;
+    bool                   failed = false, welcome = true, noChecks = false;
     sf::Keyboard::Scancode lastKey = sf::Keyboard::Scancode::Unknown;
 
     while (window.isOpen())
@@ -77,6 +77,16 @@ int main(int argc, char* argv[])
 
                     case sf::Keyboard::Scancode::Space:
                         welcome = false;
+                        break;
+
+                    case sf::Keyboard::Scancode::M:
+                        // Interesting feature
+                        noChecks = true;
+                        break;
+
+                    case sf::Keyboard::Scancode::N:
+                        // Interesting feature
+                        noChecks = false;
                         break;
 
                     case sf::Keyboard::Scancode::R:
@@ -126,7 +136,7 @@ int main(int argc, char* argv[])
                 foodRect.updatePos();
             }
 
-            if (!snake.isValid())
+            if (!noChecks && !snake.isValid())
                 failed = true;
 
             snake.render(window);
