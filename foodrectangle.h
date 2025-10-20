@@ -14,14 +14,14 @@ public:
     FoodRectangle(sf::Vector2u windowSize) : BodyRectangle(), m_windowSize(windowSize)
     {
         setFillColor(g_foodColor);
-        setSize(sf::Vector2f(g_unitX, g_unitY));
+        setSize({g_unitX, g_unitY});
     }
 
     void updatePos()
     {
         std::uniform_int_distribution<int> distribX(0, static_cast<int>(m_windowSize.x) / g_unitX - 1);
         std::uniform_int_distribution<int> distribY(0, static_cast<int>(m_windowSize.y) / g_unitY - 1);
-        setPosition(distribX(g_randGen) * g_unitX, distribY(g_randGen) * g_unitY);
+        setPosition({distribX(g_randGen) * g_unitX, distribY(g_randGen) * g_unitY});
     }
 
 private:
