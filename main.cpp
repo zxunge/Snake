@@ -30,13 +30,13 @@ int main(int argc, char* argv[])
     text.setFillColor(sf::Color::White);
     text.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
-    SnakeBody         snake(window.getSize());
-    FoodRectangle     foodRect(window.getSize());
-    Direction         movingDirection   = Direction::Down;
-    auto              begin             = std::chrono::high_resolution_clock::now();
-    auto              lastOperationTime = begin;
-    bool              failed = false, welcome = true;
-    sf::Keyboard::Key lastKey = sf::Keyboard::Scancode::Unknown;
+    SnakeBody              snake(window.getSize());
+    FoodRectangle          foodRect(window.getSize());
+    Direction              movingDirection   = Direction::Down;
+    auto                   begin             = std::chrono::high_resolution_clock::now();
+    auto                   lastOperationTime = begin;
+    bool                   failed = false, welcome = true;
+    sf::Keyboard::Scancode lastKey = sf::Keyboard::Scancode::Unknown;
 
     while (window.isOpen())
     {
