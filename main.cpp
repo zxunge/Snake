@@ -13,7 +13,7 @@ std::mt19937 g_randGen;
 
 int main(int argc, char* argv[])
 {
-    sf::RenderWindow window(sf::VideoMode(45 * g_unitX, 40 * g_unitY), "Snake", sf::Style::Titlebar | sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode({45 * g_unitX, 40 * g_unitY}), "Snake", sf::Style::Titlebar | sf::Style::Close);
     window.setFramerateLimit(60);
 
     // Initialization
@@ -36,80 +36,75 @@ int main(int argc, char* argv[])
     auto              begin             = std::chrono::high_resolution_clock::now();
     auto              lastOperationTime = begin;
     bool              failed = false, welcome = true;
-    sf::Keyboard::Key lastKey = sf::Keyboard::Key::Unknown;
+    sf::Keyboard::Key lastKey = sf::Keyboard::Scancode::Unknown;
 
     while (window.isOpen())
     {
         // Handle events
-        sf::Event event;
-        while (window.pollEvent(event))
-            switch (event.type)
+        while (const std::optional event = window.pollEvent())
+        {
+            if (event->is<sf::Event::Closed>())
+                window.close();
+            else if (const auto *keyPressed = event->getIf<sf::Event::KeyPressed>())
             {
-                case sf::Event::EventType::Closed:
-                    window.close();
-                    break;
+                if (lastKey == keyPressed->scancode && movingInterval.count() >= std::chrono::milliseconds(30).count())
+                    movingInterval -= std::chrono::milliseconds(5);
+                switch (keyPressed->scancode)
+                {
+                    case sf::Keyboard::Scancode::Up:
+                    case sf::Keyboard::Scancode::W:
+                        movingDirection = Direction::Up;
+                        snake.move(movingDirection);
+                        break;
 
-                case sf::Event::EventType::KeyPressed:
-                    if (lastKey == event.key.code && movingInterval.count() >= std::chrono::milliseconds(30).count())
-                        movingInterval -= std::chrono::milliseconds(5);
-                    switch (event.key.code)
-                    {
-                        case sf::Keyboard::Key::Up:
-                        case sf::Keyboard::Key::W:
-                            movingDirection = Direction::Up;
-                            snake.move(movingDirection);
-                            break;
+                    case sf::Keyboard::Scancode::Down:
+                    case sf::Keyboard::Scancode::S:
+                        movingDirection = Direction::Down;
+                        snake.move(movingDirection);
+                        break;
 
-                        case sf::Keyboard::Key::Down:
-                        case sf::Keyboard::Key::S:
-                            movingDirection = Direction::Down;
-                            snake.move(movingDirection);
-                            break;
+                    case sf::Keyboard::Scancode::Left:
+                    case sf::Keyboard::Scancode::A:
+                        movingDirection = Direction::Left;
+                        snake.move(movingDirection);
+                        break;
 
-                        case sf::Keyboard::Key::Left:
-                        case sf::Keyboard::Key::A:
-                            movingDirection = Direction::Left;
-                            snake.move(movingDirection);
-                            break;
+                    case sf::Keyboard::Scancode::Right:
+                    case sf::Keyboard::Scancode::D:
+                        movingDirection = Direction::Right;
+                        snake.move(movingDirection);
+                        break;
 
-                        case sf::Keyboard::Key::Right:
-                        case sf::Keyboard::Key::D:
-                            movingDirection = Direction::Right;
-                            snake.move(movingDirection);
-                            break;
+                    case sf::Keyboard::Scancode::Space:
+                        welcome = false;
+                        break;
 
-                        case sf::Keyboard::Key::Space:
-                            welcome = false;
-                            break;
+                    case sf::Keyboard::Scancode::R:
+                        // Recover default moving interval
+                        movingInterval = g_defMovingInterval;
+                        break;
 
-                        case sf::Keyboard::Key::R:
-                            // Recover default moving interval
-                            movingInterval = g_defMovingInterval;
-                            break;
+                    case sf::Keyboard::Scancode::Enter:
+                        if (failed)
+                        {
+                            // Reset variables
+                            snake             = SnakeBody(window.getSize());
+                            foodRect          = FoodRectangle(window.getSize());
+                            movingDirection   = Direction::Down;
+                            begin             = std::chrono::high_resolution_clock::now();
+                            lastOperationTime = begin;
+                            failed            = false;
+                            movingInterval    = g_defMovingInterval;
+                        }
+                        break;
 
-                        case sf::Keyboard::Key::Enter:
-                            if (failed)
-                            {
-                                // Reset variables
-                                snake             = SnakeBody(window.getSize());
-                                foodRect          = FoodRectangle(window.getSize());
-                                movingDirection   = Direction::Down;
-                                begin             = std::chrono::high_resolution_clock::now();
-                                lastOperationTime = begin;
-                                failed            = false;
-                                movingInterval    = g_defMovingInterval;
-                            }
-                            break;
-
-                        default:
-                            break;
-                    }
-                    lastKey = event.key.code;
-                    break;
-
-                default:
-                    break;
+                    default:
+                        break;
+                }
+                lastKey = keyPressed->scancode;
+                break;
             }
+        }
 
         // Clear window
         window.clear(sf::Color(0, 0, 0, 255));
@@ -140,14 +135,14 @@ int main(int argc, char* argv[])
         }
         else if (!welcome && failed)
         {
-            text.setPosition(sf::Vector2f(0, window.getSize().y / 2));
+            text.setPosition({0, window.getSize().y / 2});
             text.setString(sf::String("You are failed. Press <Enter> to restart the game."));
             window.draw(text);
         }
         else
         {
             // Render a Welcome window
-            text.setPosition(sf::Vector2f(0, window.getSize().y / 2));
+            text.setPosition({0, window.getSize().y / 2});
             text.setString(sf::String("Welcome to the Snake Game developed by zxunge! Start by pressing <Space>."));
             window.draw(text);
         }
