@@ -5,7 +5,7 @@
 void SnakeBody::move(Direction direction)
 {
     for (int i = m_body.size() - 1; i != 0; --i)
-        m_body[i].setPosition(m_body[i - 1].getPosition().x, m_body[i - 1].getPosition().y);
+        m_body[i].setPosition({m_body[i - 1].getPosition().x, m_body[i - 1].getPosition().y});
     switch (direction)
     {
         case Direction::Left:
