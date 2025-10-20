@@ -10,6 +10,7 @@
 #include <SFML/Graphics.hpp>
 
 #include <vector>
+#include <optional>
 
 class SnakeBody
 {
@@ -18,7 +19,7 @@ public:
     {
         // Initially, we have `g_initialLength' rectangles on the top.
         for (int i = g_initialLength - 1; i >= 0; --i)
-            m_body.push_back(BodyRectangle(sf::Vector2f(0.0f, i)));
+            m_body.push_back(BodyRectangle({0.0f, i}));
     }
 
     void move(Direction direction);
@@ -31,7 +32,7 @@ public:
     bool intersects(sf::RectangleShape rect)
     {
         for (auto r : m_body)
-            if (r.getGlobalBounds().intersects(rect.getGlobalBounds()))
+            if (r.getGlobalBounds().findIntersection(rect.getGlobalBounds()) != std::nullopt)
                 return true;
         return false;
     }
@@ -43,7 +44,7 @@ public:
                 return false;
         return true;
     }
-    sf::Uint32 score()
+    std::uint32_t score()
     {
         return m_body.size() - g_initialLength;
     }
