@@ -25,8 +25,7 @@ int main(int argc, char* argv[])
     sf::Font font;
     if (!font.openFromFile(g_fontFile))
         return -1;
-    sf::Text text; // Global text holder
-    text.setFont(font);
+    sf::Text text(font); // Global text holder
     text.setCharacterSize(30);
     text.setFillColor(sf::Color::White);
     text.setStyle(sf::Text::Bold | sf::Text::Underlined);
