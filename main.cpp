@@ -8,6 +8,7 @@
 #include <chrono>
 #include <random>
 #include <string>
+#include <optional>
 
 std::mt19937 g_randGen;
 
