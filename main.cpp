@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
 
     // Load fonts
     sf::Font font;
-    if (!font.loadFromFile(g_fontFile))
+    if (!font.openFromFile(g_fontFile))
         return -1;
     sf::Text text; // Global text holder
     text.setFont(font);
