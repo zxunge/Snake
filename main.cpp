@@ -6,9 +6,9 @@
 #include <SFML/Graphics.hpp>
 
 #include <chrono>
+#include <optional>
 #include <random>
 #include <string>
-#include <optional>
 
 std::mt19937 g_randGen;
 
@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
         {
             if (event->is<sf::Event::Closed>())
                 window.close();
-            else if (const auto *keyPressed = event->getIf<sf::Event::KeyPressed>())
+            else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
             {
                 if (lastKey == keyPressed->scancode && movingInterval.count() >= std::chrono::milliseconds(30).count())
                     movingInterval -= std::chrono::milliseconds(5);
@@ -135,14 +135,14 @@ int main(int argc, char* argv[])
         }
         else if (!welcome && failed)
         {
-            text.setPosition({0, window.getSize().y / 2});
+            text.setPosition({0.0f, static_cast<float>(window.getSize().y / 2)});
             text.setString(sf::String("You are failed. Press <Enter> to restart the game."));
             window.draw(text);
         }
         else
         {
             // Render a Welcome window
-            text.setPosition({0, window.getSize().y / 2});
+            text.setPosition({0.0f, static_cast<float>(window.getSize().y / 2)});
             text.setString(sf::String("Welcome to the Snake Game developed by zxunge! Start by pressing <Space>."));
             window.draw(text);
         }

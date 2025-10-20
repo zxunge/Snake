@@ -21,7 +21,7 @@ public:
     {
         std::uniform_int_distribution<int> distribX(0, static_cast<int>(m_windowSize.x) / g_unitX - 1);
         std::uniform_int_distribution<int> distribY(0, static_cast<int>(m_windowSize.y) / g_unitY - 1);
-        setPosition({distribX(g_randGen) * g_unitX, distribY(g_randGen) * g_unitY});
+        setPosition({static_cast<float>(distribX(g_randGen) * g_unitX), static_cast<float>(distribY(g_randGen) * g_unitY)});
     }
 
 private:

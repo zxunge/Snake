@@ -9,8 +9,8 @@
 
 #include <SFML/Graphics.hpp>
 
-#include <vector>
 #include <optional>
+#include <vector>
 
 class SnakeBody
 {
@@ -18,7 +18,7 @@ public:
     SnakeBody(sf::Vector2u windowSize) : m_windowSize(windowSize)
     {
         // Initially, we have `g_initialLength' rectangles on the top.
-        for (int i = g_initialLength - 1; i >= 0; --i)
+        for (float i = g_initialLength - 1; i >= 0; --i)
             m_body.push_back(BodyRectangle({0.0f, i}));
     }
 
