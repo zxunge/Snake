@@ -15,21 +15,21 @@ public:
     BodyRectangle();
     BodyRectangle(sf::Vector2f pos);
 
-    inline void moveRight(sf::Uint16 distance = 1)
+    inline void moveRight(std::uint16_t distance = 1)
     {
-        setPosition(getPosition().x + distance * g_unitX, getPosition().y);
+        setPosition({getPosition().x + distance * g_unitX, getPosition().y});
     }
-    inline void moveLeft(sf::Uint16 distance = 1)
+    inline void moveLeft(std::uint16_t distance = 1)
     {
-        setPosition(getPosition().x - distance * g_unitX, getPosition().y);
+        setPosition({getPosition().x - distance * g_unitX, getPosition().y});
     }
-    inline void moveUp(sf::Uint16 distance = 1)
+    inline void moveUp(std::uint16_t distance = 1)
     {
-        setPosition(getPosition().x, getPosition().y - distance * g_unitY);
+        setPosition({getPosition().x, getPosition().y - distance * g_unitY});
     }
-    inline void moveDown(sf::Uint16 distance = 1)
+    inline void moveDown(std::uint16_t distance = 1)
     {
-        setPosition(getPosition().x, getPosition().y + distance * g_unitY);
+        setPosition({getPosition().x, getPosition().y + distance * g_unitY});
     }
 };
 
