@@ -1,25 +1,28 @@
 // SPDX-License-Identifier: MIT
 
-#include "foodrectangle.h"
-#include "snakebody.h"
-
+// clang-format off
 #include <SFML/Graphics.hpp>
 
-#include <chrono>
 #include <optional>
 #include <random>
 #include <string>
 
-std::mt19937 g_randGen;
+#include "callbacklongpressdetector.h"
+#include "foodrectangle.h"
+#include "snakebody.h"
+// clang-format on
+
+std::default_random_engine g_randGen;
 
 int main(int argc, char* argv[])
 {
-    sf::RenderWindow window(sf::VideoMode({70 * g_unitX, 65 * g_unitY}), "Snake", sf::Style::Titlebar | sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode({60 * g_unitX, 50 * g_unitY}), "Snake", sf::Style::Titlebar | sf::Style::Close);
     window.setFramerateLimit(60);
 
     // Initialization
-    g_randGen                                = std::mt19937(std::random_device{}());
-    std::chrono::milliseconds movingInterval = g_defMovingInterval;
+    g_randGen                = std::default_random_engine(static_cast<unsigned>(time(nullptr)));
+    sf::Time  movingInterval = g_defMovingInterval;
+    sf::Clock clock;
 
     // Load fonts
     sf::Font font;
@@ -30,13 +33,157 @@ int main(int argc, char* argv[])
     text.setFillColor(sf::Color::White);
     text.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
-    SnakeBody              snake(window.getSize());
-    FoodRectangle          foodRect(window.getSize());
-    Direction              movingDirection   = Direction::Down;
-    auto                   begin             = std::chrono::high_resolution_clock::now();
-    auto                   lastOperationTime = begin;
-    bool                   failed = false, welcome = true, noChecks = false;
-    sf::Keyboard::Scancode lastKey = sf::Keyboard::Scancode::Unknown;
+    SnakeBody     snake(window.getSize());
+    FoodRectangle foodRect(window.getSize());
+    Direction     movingDirection = Direction::Down;
+    bool          failed = false, welcome = true, noChecks = false;
+
+    // Key handlers
+    CallbackLongPressDetector detectorW(sf::Keyboard::Scancode::W, 0.5f);
+    CallbackLongPressDetector detectorA(sf::Keyboard::Scancode::A, 0.5f);
+    CallbackLongPressDetector detectorS(sf::Keyboard::Scancode::S, 0.5f);
+    CallbackLongPressDetector detectorD(sf::Keyboard::Scancode::D, 0.5f);
+    CallbackLongPressDetector detectorUp(sf::Keyboard::Scancode::Up, 0.5f);
+    CallbackLongPressDetector detectorDown(sf::Keyboard::Scancode::Down, 0.5f);
+    CallbackLongPressDetector detectorLeft(sf::Keyboard::Scancode::Left, 0.5f);
+    CallbackLongPressDetector detectorRight(sf::Keyboard::Scancode::Right, 0.5f);
+
+    detectorA.setCallbacks(
+        [&]()
+        {
+            movingDirection = Direction::Left;
+            snake.move(movingDirection);
+        },
+        [&]()
+        {
+            if (movingInterval >= sf::milliseconds(30))
+                movingInterval -= sf::milliseconds(5);
+        },
+        [&]()
+        {
+            // Recover default moving interval
+            movingInterval = g_defMovingInterval;
+        },
+        [&]() {});
+    detectorLeft.setCallbacks(
+        [&]()
+        {
+            movingDirection = Direction::Left;
+            snake.move(movingDirection);
+        },
+        [&]()
+        {
+            if (movingInterval >= sf::milliseconds(30))
+                movingInterval -= sf::milliseconds(5);
+        },
+        [&]()
+        {
+            // Recover default moving interval
+            movingInterval = g_defMovingInterval;
+        },
+        [&]() {});
+    detectorW.setCallbacks(
+        [&]()
+        {
+            movingDirection = Direction::Up;
+            snake.move(movingDirection);
+        },
+        [&]()
+        {
+            if (movingInterval >= sf::milliseconds(30))
+                movingInterval -= sf::milliseconds(5);
+        },
+        [&]()
+        {
+            // Recover default moving interval
+            movingInterval = g_defMovingInterval;
+        },
+        [&]() {});
+    detectorUp.setCallbacks(
+        [&]()
+        {
+            movingDirection = Direction::Up;
+            snake.move(movingDirection);
+        },
+        [&]()
+        {
+            if (movingInterval >= sf::milliseconds(30))
+                movingInterval -= sf::milliseconds(5);
+        },
+        [&]()
+        {
+            // Recover default moving interval
+            movingInterval = g_defMovingInterval;
+        },
+        [&]() {});
+    detectorS.setCallbacks(
+        [&]()
+        {
+            movingDirection = Direction::Down;
+            snake.move(movingDirection);
+        },
+        [&]()
+        {
+            if (movingInterval >= sf::milliseconds(30))
+                movingInterval -= sf::milliseconds(5);
+        },
+        [&]()
+        {
+            // Recover default moving interval
+            movingInterval = g_defMovingInterval;
+        },
+        [&]() {});
+    detectorDown.setCallbacks(
+        [&]()
+        {
+            movingDirection = Direction::Down;
+            snake.move(movingDirection);
+        },
+        [&]()
+        {
+            if (movingInterval >= sf::milliseconds(30))
+                movingInterval -= sf::milliseconds(5);
+        },
+        [&]()
+        {
+            // Recover default moving interval
+            movingInterval = g_defMovingInterval;
+        },
+        [&]() {});
+    detectorD.setCallbacks(
+        [&]()
+        {
+            movingDirection = Direction::Right;
+            snake.move(movingDirection);
+        },
+        [&]()
+        {
+            if (movingInterval >= sf::milliseconds(30))
+                movingInterval -= sf::milliseconds(5);
+        },
+        [&]()
+        {
+            // Recover default moving interval
+            movingInterval = g_defMovingInterval;
+        },
+        [&]() {});
+    detectorRight.setCallbacks(
+        [&]()
+        {
+            movingDirection = Direction::Right;
+            snake.move(movingDirection);
+        },
+        [&]()
+        {
+            if (movingInterval >= sf::milliseconds(30))
+                movingInterval -= sf::milliseconds(5);
+        },
+        [&]()
+        {
+            // Recover default moving interval
+            movingInterval = g_defMovingInterval;
+        },
+        [&]() {});
 
     while (window.isOpen())
     {
@@ -47,34 +194,8 @@ int main(int argc, char* argv[])
                 window.close();
             else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
             {
-                if (lastKey == keyPressed->scancode && movingInterval.count() >= std::chrono::milliseconds(30).count())
-                    movingInterval -= std::chrono::milliseconds(5);
                 switch (keyPressed->scancode)
                 {
-                    case sf::Keyboard::Scancode::Up:
-                    case sf::Keyboard::Scancode::W:
-                        movingDirection = Direction::Up;
-                        snake.move(movingDirection);
-                        break;
-
-                    case sf::Keyboard::Scancode::Down:
-                    case sf::Keyboard::Scancode::S:
-                        movingDirection = Direction::Down;
-                        snake.move(movingDirection);
-                        break;
-
-                    case sf::Keyboard::Scancode::Left:
-                    case sf::Keyboard::Scancode::A:
-                        movingDirection = Direction::Left;
-                        snake.move(movingDirection);
-                        break;
-
-                    case sf::Keyboard::Scancode::Right:
-                    case sf::Keyboard::Scancode::D:
-                        movingDirection = Direction::Right;
-                        snake.move(movingDirection);
-                        break;
-
                     case sf::Keyboard::Scancode::Space:
                         welcome = false;
                         break;
@@ -89,32 +210,36 @@ int main(int argc, char* argv[])
                         noChecks = false;
                         break;
 
-                    case sf::Keyboard::Scancode::R:
-                        // Recover default moving interval
-                        movingInterval = g_defMovingInterval;
+                    case sf::Keyboard::Scancode::U:
+                        foodRect.updatePos();
                         break;
 
                     case sf::Keyboard::Scancode::Enter:
                         if (failed)
                         {
                             // Reset variables
-                            snake             = SnakeBody(window.getSize());
-                            foodRect          = FoodRectangle(window.getSize());
-                            movingDirection   = Direction::Down;
-                            begin             = std::chrono::high_resolution_clock::now();
-                            lastOperationTime = begin;
-                            failed            = false;
-                            movingInterval    = g_defMovingInterval;
+                            snake           = SnakeBody(window.getSize());
+                            foodRect        = FoodRectangle(window.getSize());
+                            movingDirection = Direction::Down;
+                            failed          = false;
+                            movingInterval  = g_defMovingInterval;
                         }
                         break;
 
                     default:
                         break;
                 }
-                lastKey = keyPressed->scancode;
                 break;
             }
         }
+        detectorW.update();
+        detectorA.update();
+        detectorS.update();
+        detectorD.update();
+        detectorUp.update();
+        detectorRight.update();
+        detectorDown.update();
+        detectorLeft.update();
 
         // Clear window
         window.clear(sf::Color(0, 0, 0, 255));
@@ -122,12 +247,10 @@ int main(int argc, char* argv[])
         // Draw graphic items
         if (!welcome && !failed) [[likely]]
         {
-            auto now     = std::chrono::high_resolution_clock::now();
-            auto elapsed = now - lastOperationTime;
-            if (elapsed >= movingInterval)
+            if (clock.getElapsedTime() >= movingInterval)
             {
                 snake.move(movingDirection);
-                lastOperationTime = now;
+                clock.restart();
             }
 
             if (snake.intersects(foodRect))

@@ -31,9 +31,8 @@ public:
     }
     bool intersects(sf::RectangleShape rect)
     {
-        for (auto r : m_body)
-            if (r.getGlobalBounds().findIntersection(rect.getGlobalBounds()) != std::nullopt)
-                return true;
+        if (m_body[0].getGlobalBounds().findIntersection(rect.getGlobalBounds()) != std::nullopt)
+            return true;
         return false;
     }
     bool isValid()

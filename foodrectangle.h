@@ -15,6 +15,7 @@ public:
     {
         setFillColor(g_foodColor);
         setSize({g_unitX, g_unitY});
+        updatePos();
     }
 
     void updatePos()

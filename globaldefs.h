@@ -5,18 +5,20 @@
 
 #include <SFML/Graphics/Color.hpp>
 
-#include <chrono>
+#include <SFML/System/Clock.hpp>
+#include <SFML/System/Time.hpp>
+
 #include <random>
 #include <string>
 
-const int                       g_unitX         = 15;
-const int                       g_unitY         = 15;
-const int                       g_initialLength = 3;
-const sf::Color                 g_bodyColor     = sf::Color::Green;
-const sf::Color                 g_foodColor     = sf::Color::Red;
-const std::string               g_fontFile("Zxunge Hand-Regular.ttf");
-const std::chrono::milliseconds g_defMovingInterval(80);
-extern std::mt19937             g_randGen;
+const int                         g_unitX         = 15;
+const int                         g_unitY         = 15;
+const int                         g_initialLength = 3;
+const sf::Color                   g_bodyColor     = sf::Color::Green;
+const sf::Color                   g_foodColor     = sf::Color::Red;
+const std::string                 g_fontFile("Zxunge Hand-Regular.ttf");
+const sf::Time                    g_defMovingInterval = sf::milliseconds(80);
+extern std::default_random_engine g_randGen;
 
 enum class Direction
 {
