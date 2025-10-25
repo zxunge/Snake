@@ -15,7 +15,7 @@ add_executable(Snake WIN32
     globaldefs.h
     snakebody.cpp
     snakebody.h
-	callbacklongpressdetector.h
+    keyhandler.h
 )
 
 target_link_libraries(Snake PRIVATE SFML::Graphics)

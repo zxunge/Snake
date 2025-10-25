@@ -1,16 +1,14 @@
 // SPDX-License-Identifier: MIT
 
-// clang-format off
+#include "foodrectangle.h"
+#include "keyhandler.h"
+#include "snakebody.h"
+
 #include <SFML/Graphics.hpp>
 
 #include <optional>
 #include <random>
 #include <string>
-
-#include "callbacklongpressdetector.h"
-#include "foodrectangle.h"
-#include "snakebody.h"
-// clang-format on
 
 std::default_random_engine g_randGen;
 
@@ -20,7 +18,7 @@ int main(int argc, char* argv[])
     window.setFramerateLimit(60);
 
     // Initialization
-    g_randGen                = std::default_random_engine(static_cast<unsigned>(time(nullptr)));
+    g_randGen                = std::default_random_engine(std::random_device{}());
     sf::Time  movingInterval = g_defMovingInterval;
     sf::Clock clock;
 
@@ -39,16 +37,12 @@ int main(int argc, char* argv[])
     bool          failed = false, welcome = true, noChecks = false;
 
     // Key handlers
-    CallbackLongPressDetector detectorW(sf::Keyboard::Scancode::W, 0.5f);
-    CallbackLongPressDetector detectorA(sf::Keyboard::Scancode::A, 0.5f);
-    CallbackLongPressDetector detectorS(sf::Keyboard::Scancode::S, 0.5f);
-    CallbackLongPressDetector detectorD(sf::Keyboard::Scancode::D, 0.5f);
-    CallbackLongPressDetector detectorUp(sf::Keyboard::Scancode::Up, 0.5f);
-    CallbackLongPressDetector detectorDown(sf::Keyboard::Scancode::Down, 0.5f);
-    CallbackLongPressDetector detectorLeft(sf::Keyboard::Scancode::Left, 0.5f);
-    CallbackLongPressDetector detectorRight(sf::Keyboard::Scancode::Right, 0.5f);
+    KeyHandler detectorUp({sf::Keyboard::Scancode::Up});
+    KeyHandler detectorDown({sf::Keyboard::Scancode::Down});
+    KeyHandler detectorLeft({sf::Keyboard::Scancode::Left});
+    KeyHandler detectorRight({sf::Keyboard::Scancode::Right});
 
-    detectorA.setCallbacks(
+    detectorLeft.setHandlers(
         [&]()
         {
             movingDirection = Direction::Left;
@@ -65,24 +59,7 @@ int main(int argc, char* argv[])
             movingInterval = g_defMovingInterval;
         },
         [&]() {});
-    detectorLeft.setCallbacks(
-        [&]()
-        {
-            movingDirection = Direction::Left;
-            snake.move(movingDirection);
-        },
-        [&]()
-        {
-            if (movingInterval >= sf::milliseconds(30))
-                movingInterval -= sf::milliseconds(5);
-        },
-        [&]()
-        {
-            // Recover default moving interval
-            movingInterval = g_defMovingInterval;
-        },
-        [&]() {});
-    detectorW.setCallbacks(
+    detectorUp.setHandlers(
         [&]()
         {
             movingDirection = Direction::Up;
@@ -99,24 +76,7 @@ int main(int argc, char* argv[])
             movingInterval = g_defMovingInterval;
         },
         [&]() {});
-    detectorUp.setCallbacks(
-        [&]()
-        {
-            movingDirection = Direction::Up;
-            snake.move(movingDirection);
-        },
-        [&]()
-        {
-            if (movingInterval >= sf::milliseconds(30))
-                movingInterval -= sf::milliseconds(5);
-        },
-        [&]()
-        {
-            // Recover default moving interval
-            movingInterval = g_defMovingInterval;
-        },
-        [&]() {});
-    detectorS.setCallbacks(
+    detectorDown.setHandlers(
         [&]()
         {
             movingDirection = Direction::Down;
@@ -133,41 +93,7 @@ int main(int argc, char* argv[])
             movingInterval = g_defMovingInterval;
         },
         [&]() {});
-    detectorDown.setCallbacks(
-        [&]()
-        {
-            movingDirection = Direction::Down;
-            snake.move(movingDirection);
-        },
-        [&]()
-        {
-            if (movingInterval >= sf::milliseconds(30))
-                movingInterval -= sf::milliseconds(5);
-        },
-        [&]()
-        {
-            // Recover default moving interval
-            movingInterval = g_defMovingInterval;
-        },
-        [&]() {});
-    detectorD.setCallbacks(
-        [&]()
-        {
-            movingDirection = Direction::Right;
-            snake.move(movingDirection);
-        },
-        [&]()
-        {
-            if (movingInterval >= sf::milliseconds(30))
-                movingInterval -= sf::milliseconds(5);
-        },
-        [&]()
-        {
-            // Recover default moving interval
-            movingInterval = g_defMovingInterval;
-        },
-        [&]() {});
-    detectorRight.setCallbacks(
+    detectorRight.setHandlers(
         [&]()
         {
             movingDirection = Direction::Right;
@@ -232,10 +158,6 @@ int main(int argc, char* argv[])
                 break;
             }
         }
-        detectorW.update();
-        detectorA.update();
-        detectorS.update();
-        detectorD.update();
         detectorUp.update();
         detectorRight.update();
         detectorDown.update();
