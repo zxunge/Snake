@@ -19,7 +19,6 @@ const sf::Color                   g_foodColor     = sf::Color::Red;
 const std::filesystem::path       g_fontFile("sansation.ttf");
 const sf::Time                    g_defMovingInterval = sf::milliseconds(80);
 extern std::default_random_engine g_randGen;
-extern std::filesystem::path      g_exeDir;
 
 enum class Direction
 {

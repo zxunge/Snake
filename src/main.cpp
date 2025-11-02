@@ -6,7 +6,6 @@
 #include <sfml/Window.hpp>
 
 std::default_random_engine g_randGen;
-std::filesystem::path g_exeDir;
 
 int main(int argc, char** argv)
 {
@@ -14,7 +13,6 @@ int main(int argc, char** argv)
     game::MainMenu   menu(window);
     // Initialization
     g_randGen = std::default_random_engine(std::random_device{}());
-    g_exeDir = std::filesystem::absolute(argv[0]).parent_path();
     menu.start();
     return 0;
 }

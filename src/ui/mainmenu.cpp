@@ -40,8 +40,8 @@ void MainMenu::start()
 
 void MainMenu::setup_menu_context()
 {
-    if (!m_font.openFromFile(g_exeDir / g_fontFile))
-        return;
+    if (!m_font.openFromFile(std::filesystem::current_path().parent_path() / g_fontFile))
+        exit(EXIT_FAILURE);
     game_menu::Style style{.TitleFont            = &m_font,
                            .ItemFont             = &m_font,
                            .TitleFontSize        = 36,
