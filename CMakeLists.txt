@@ -7,19 +7,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(SFML 3 REQUIRED COMPONENTS Graphics)
 
-add_executable(Snake WIN32
-    main.cpp
-    bodyrectangle.cpp
-    bodyrectangle.h
-    foodrectangle.h
-    globaldefs.h
-    snakebody.cpp
-    snakebody.h
-    keyhandler.h
-)
+add_subdirectory(3rdparty)
+add_subdirectory(src)
 
-target_link_libraries(Snake PRIVATE SFML::Graphics)
-
-file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/Zxunge Hand-Regular.ttf" DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/sansation.ttf" DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 

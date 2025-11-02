@@ -1,0 +1,3 @@
+[submodule "3rdparty/sfGameMenu"]
+	path = 3rdparty/sfGameMenu
+	url = https://github.com/zxunge/sfGameMenu.git

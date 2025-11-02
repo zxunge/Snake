@@ -24,10 +24,10 @@ public:
 
     void move(Direction direction);
     void eat(FoodRectangle food);
-    void render(sf::RenderWindow& wnd)
+    void render(sf::RenderWindow* wnd)
     {
         for (auto r : m_body)
-            wnd.draw(r);
+            wnd->draw(r);
     }
     bool intersects(sf::RectangleShape rect)
     {
