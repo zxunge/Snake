@@ -23,10 +23,10 @@ void GameController::start()
 
 void GameController::gameLoop()
 {
-    bool      loopInvarient = true;
-    Direction direction;
-    m_scale = 5;
+    bool          loopInvarient = true;
+    Direction     direction;
     FoodRectangle food(m_screen->getSize());
+    m_scale = 5;
     while (loopInvarient)
     {
         setupScene();
@@ -54,7 +54,7 @@ void GameController::gameLoop()
             }
             if (event->is<sf::Event::Closed>())
             {
-                exit(0);
+                exit(EXIT_SUCCESS);
             }
         } // event loop
         m_snake.move(direction);
@@ -72,7 +72,7 @@ void GameController::gameLoop()
         m_screen->display();
         m_screen->setFramerateLimit(60);
     }
-} // gameLoop()
+}
 
 void GameController::setupScene()
 {
@@ -80,19 +80,6 @@ void GameController::setupScene()
     m_snake.render(m_screen);
 }
 
-bool checkCollision(const sf::RectangleShape& a, const sf::RectangleShape& b)
-{
-    return a.getGlobalBounds().findIntersection(b.getGlobalBounds()) != std::nullopt;
-}
-
-sf::RectangleShape getRectangleAt(sf::Vector2f location, sf::Color color)
-{
-    sf::RectangleShape box;
-    box.setSize(sf::Vector2f(BOX_SIZE, BOX_SIZE));
-    box.setPosition(location);
-    box.setFillColor(color);
-    return box;
-}
 void GameController::loadResources()
 {
     // TODO
