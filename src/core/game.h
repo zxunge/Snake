@@ -7,16 +7,13 @@
 
 #include <SFML/Graphics.hpp>
 
-#define BOX_SIZE 20
-
 namespace game
 {
 /*
 GameController is the central interface of the game.
 This class will monitor the working of game:
 *	Movement of snake
-*	Checking collisions
-*	When to play sound etc
+*	Checking the validity of the snake
 */
 
 const std::string MenuStrings[5] = {"Game Over!", "Do you wish to continue?", "Yes", "No", "Exit"}; // menu strings
@@ -35,8 +32,8 @@ enum Fonts
 };
 
 /*==================================================*
- *			The main game controller *
- *===================================================*/
+ *			The main game controller
+ *==================================================*/
 class GameController
 {
 public:
