@@ -3,7 +3,7 @@
 #include "globaldefs.h"
 #include "ui/mainmenu.h"
 
-#include <sfml/Window.hpp>
+#include <SFML/Window.hpp>
 
 std::default_random_engine g_randGen;
 
