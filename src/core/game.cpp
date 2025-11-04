@@ -26,6 +26,8 @@ void GameController::gameLoop()
     bool          loop = true, check = true;
     Direction     direction;
     FoodRectangle food(m_screen->getSize());
+    sf::Time      movingInterval = g_defMovingInterval;
+    sf::Clock     clock;
     m_scale = 5;
     while (loop)
     {
@@ -76,7 +78,11 @@ void GameController::gameLoop()
             if (event->is<sf::Event::Closed>())
                 exit(EXIT_SUCCESS);
         } // event loop
-        m_snake.move(direction);
+        if (clock.getElapsedTime() >= movingInterval)
+        {
+            m_snake.move(direction);
+            clock.restart();
+        }
         if (check && !m_snake.isValid()) // game over
             loop = false;
         if (m_snake.intersects(food))
