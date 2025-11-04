@@ -23,11 +23,11 @@ void GameController::start()
 
 void GameController::gameLoop()
 {
-    bool          loopInvarient = true;
+    bool          loop = true, check = true;
     Direction     direction;
     FoodRectangle food(m_screen->getSize());
     m_scale = 5;
-    while (loopInvarient)
+    while (loop)
     {
         setupScene();
         m_screen->draw(food);
@@ -35,38 +35,54 @@ void GameController::gameLoop()
         {
             if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>())
             {
-                if (keyReleased->scancode == sf::Keyboard::Scancode::Up)
+                switch (keyReleased->scancode)
                 {
-                    direction = Direction::Up;
-                }
-                else if (keyReleased->scancode == sf::Keyboard::Scancode::Down)
-                {
-                    direction = Direction::Down;
-                }
-                else if (keyReleased->scancode == sf::Keyboard::Scancode::Left)
-                {
-                    direction = Direction::Left;
-                }
-                else if (keyReleased->scancode == sf::Keyboard::Scancode::Right)
-                {
-                    direction = Direction::Right;
+                    case sf::Keyboard::Scancode::Up:
+                    case sf::Keyboard::Scancode::W:
+                        direction = Direction::Up;
+                        break;
+                    
+                    case sf::Keyboard::Scancode::Down:
+                    case sf::Keyboard::Scancode::S:
+                        direction = Direction::Down;
+                        break;
+                    
+                    case sf::Keyboard::Scancode::Left:
+                    case sf::Keyboard::Scancode::A:
+                        direction = Direction::Left;
+                        break;
+                    
+                    case sf::Keyboard::Scancode::Right:
+                    case sf::Keyboard::Scancode::D:
+                        direction = Direction::Right;
+                        break;
+
+                    case sf::Keyboard::Scancode::U:
+                        food.updatePos();
+                        break;
+
+                    case sf::Keyboard::Scancode::N:
+                        check = false;
+                        break;
+
+                    case sf::Keyboard::Scancode::M:
+                        check = true;
+                        break;
+                    
+                    default:
+                        break;
                 }
             }
             if (event->is<sf::Event::Closed>())
-            {
                 exit(EXIT_SUCCESS);
-            }
         } // event loop
         m_snake.move(direction);
-        if (!m_snake.isValid())
-        {
-            // game over
-            loopInvarient = false;
-        }
+        if (check && !m_snake.isValid()) // game over
+            loop = false;
         if (m_snake.intersects(food))
         {
             m_snake.eat(food);
-            m_score++;
+            ++m_score;
             food.updatePos();
         }
         m_screen->display();
